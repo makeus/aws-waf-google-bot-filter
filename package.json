@@ -1,0 +1,28 @@
+{
+  "name": "aws-waf-google-bot-filter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:makeus/aws-waf-google-bot-filter.git",
+  "author": "<mathias.keus@gmail.fi>",
+  "license": "MIT",
+  "engines": {
+    "node": "<=8.10"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/jest": "^24.0.5",
+    "@types/node": "^11.9.4",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-jest": "^4.0.2",
+    "gulp-rename": "^1.4.0",
+    "gulp-typescript": "^5.0.0",
+    "gulp-zip": "^4.2.0",
+    "jest": "^24.1.0",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.404.0"
+  }
+}
