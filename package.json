@@ -1,7 +1,6 @@
 {
   "name": "aws-waf-google-bot-filter",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "git@github.com:makeus/aws-waf-google-bot-filter.git",
   "author": "<mathias.keus@gmail.fi>",
   "license": "MIT",

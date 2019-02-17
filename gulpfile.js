@@ -27,7 +27,7 @@ gulp.task('typescript', () => {
  * TODO: Refactor to use smart copy (only required dependencies)
  */
 gulp.task('libs', () => {
-    return gulp.src('./../../node_modules/**/*')
+    return gulp.src('./node_modules/**/*')
         .pipe(gulp.dest('build/node_modules/'));
 });
 
