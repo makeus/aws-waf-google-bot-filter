@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  AWS Waf Google bot filter - Helper for AWS waf to prevent the blocking of google bots
+Parameters:
+
+  SourceIPSetId:
+    Description: Id of the IP Set used as source for IPs to check. Example example1ds3t-46da-4fdb-b8d5-abc321j569j5
+    Type: String
+    Default: 885522be-368d-4d02-ada3-b699c315d1e8
+
+  LambdaScriptBucket:
+    Description: Aws s3 bucket where lamda code zips are
+    Type: String
+    Default: google-bot-filter
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+
+  LambdaApiParserFileName:
+    Description: Filename of the code for the api-parser lambda
+    Type: String
+    Default: api-parser.zip
+    AllowedPattern: ^[a-zA-Z0-9-]*\.zip$
+    ConstraintDescription: Zip file
+
+Resources:
+
+  ResultIpSet:
+    Type: AWS::WAFRegional::IPSet
+    Properties:
+      Name: !Join ['-', [!Ref 'AWS::StackName', 'result-ipset']]
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      RoleName: !Join ['-', [!Ref 'AWS::StackName', 'lambda-execution-role']]
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: arn:aws:logs:*:*:*
+
+  LambdaReadSourceIpSetPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:  !Join ['-', [!Ref 'AWS::StackName', 'read-source-ipset-policy']]
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - waf-regional:GetIPSet
+            Resource: !Join [':', ['arn:aws:waf-regional', !Ref 'AWS::Region', !Ref 'AWS::AccountId', !Join ['/', ['ipset', !Ref SourceIPSetId]]]]
+      Roles:
+        - !Ref LambdaExecutionRole
+
+  LambdaEditResultIpSetPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Join ['-', [!Ref 'AWS::StackName', 'edit-result-ipset-policy']]
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - waf-regional:UpdateIPSet
+            Resource: !Join [':', ['arn:aws:waf-regional', !Ref 'AWS::Region', !Ref 'AWS::AccountId', !Join ['', ['ipset/', !Ref ResultIpSet]]]]
+          - Effect: Allow
+            Action:
+              - waf-regional:GetChangeToken
+            Resource: !Join [':', ['arn:aws:waf-regional', !Ref 'AWS::Region', !Ref 'AWS::AccountId', 'changetoken/*']]
+
+      Roles:
+        - !Ref LambdaExecutionRole
+
+  LambdaApiParserFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: lambda.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaScriptBucket
+        S3Key: !Ref LambdaApiParserFileName
+      Runtime: nodejs8.10
+      Timeout: 300
+      FunctionName: !Join ['-', [!Ref 'AWS::StackName', 'googlebot-filter']]
+
+  CloudwatchEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Join ['-', [!Ref 'AWS::StackName', 'googlebot-filter-lambda-launcher']]
+      ScheduleExpression: 'rate(2 minutes)'
+      Targets:
+        - Arn: !GetAtt LambdaApiParserFunction.Arn
+          Id: !Join ['-', [!Ref 'AWS::StackName', 'lambda-target']]
+          Input: !Join ['', ['{"sourceIpSetId":"', !Ref SourceIPSetId, '","resultSourceSetId":"', !Ref ResultIpSet, '"}']]
+
+Outputs:
+  ResultIpSetId:
+    Description: IP set ID of the result
+    Value: !Ref ResultIpSet
