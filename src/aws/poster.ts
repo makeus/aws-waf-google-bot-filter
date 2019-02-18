@@ -10,6 +10,9 @@ class Poster {
     }
 
     public async updateIpSet(IPSetId: string, IPS: IP[]): Promise<void> {
+        if (IPS.length === 0) {
+            return
+        }
 
         let {ChangeToken} = await this.waf.getChangeToken().promise()
 

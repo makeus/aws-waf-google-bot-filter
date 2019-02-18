@@ -27,12 +27,12 @@ describe('GoogleVerify', () => {
                 })
 
                 let ip: IP = {
-                    Value: '66.249.66.1',
+                    Value: '10.245.66.1/32',
                     Type: 'IPV4',
                 }
 
                 expect(await GoogleVerify.isGoogleIp(ip)).toEqual(true)
-                expect(reverse).toHaveBeenCalledWith('66.249.66.1', expect.any(Function))
+                expect(reverse).toHaveBeenCalledWith('10.245.66.1', expect.any(Function))
 
             })
         }
@@ -45,19 +45,19 @@ describe('GoogleVerify', () => {
             })
 
             let ip: IP = {
-                Value: '66.249.66.1',
+                Value: '10.241.66.1/32',
                 Type: 'IPV4',
             }
 
             expect(await GoogleVerify.isGoogleIp(ip)).toEqual(false)
-            expect(reverse).toHaveBeenCalledWith('66.249.66.1', expect.any(Function))
+            expect(reverse).toHaveBeenCalledWith('10.241.66.1', expect.any(Function))
 
         })
 
         test('should not try to retrieve ipv6', async () => {
 
             let ip: IP = {
-                Value: '2001:4860:4801:1303:0:6006:1300:b075',
+                Value: '2001:4860:4801:1303:0:6006:1300:b075/128',
                 Type: 'IPV6',
             }
 

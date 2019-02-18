@@ -4,6 +4,21 @@ describe('Poster', () => {
 
     describe('#updateIpSet', () => {
 
+        test('should not run without IPS', async () => {
+
+            let wafClient = {
+                getChangeToken: jest.fn(),
+                updateIPSet: jest.fn(),
+            }
+
+            // @ts-ignore
+            let poster = new Poster(wafClient)
+
+            await poster.updateIpSet('example1ds3t-46da-4fdb-b8d5-abc321j569j5', [])
+
+            expect(wafClient.updateIPSet).not.toHaveBeenCalled()
+        })
+
         test('should get changetoken after which it should call updateIPSet with updates generated from given IPS', async () => {
 
             let wafClient = {
