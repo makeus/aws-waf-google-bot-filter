@@ -3,7 +3,6 @@ import Retriever from './aws/retriever'
 import IP from './ip'
 import GoogleVerify from './google-verify'
 
-
 class Runner {
 
     private readonly poster: Poster
