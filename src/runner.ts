@@ -19,11 +19,11 @@ class Runner {
 
         let IPsToAdd: IP[] = []
 
-        await IPs.map((IP: IP) => GoogleVerify.isGoogleIp(IP).then((isGoogleIp) => {
+        await Promise.all(IPs.map((IP: IP) => GoogleVerify.isGoogleIp(IP).then((isGoogleIp) => {
             if (isGoogleIp) {
                 IPsToAdd.push(IP)
             }
-        }))
+        })))
 
         await this.poster.updateIpSet(resultIPSetId, IPsToAdd)
     }

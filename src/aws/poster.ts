@@ -19,10 +19,6 @@ class Poster {
         let Updates = IPS.reduce((updates: WAFRegional.IPSetUpdates, ip: IP) => {
             updates.push({
                 IPSetDescriptor: ip,
-                Action: 'DELETE',
-            })
-            updates.push({
-                IPSetDescriptor: ip,
                 Action: 'INSERT',
             })
             return updates

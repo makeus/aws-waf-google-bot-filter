@@ -33,7 +33,7 @@ gulp.task('libs', () => {
 
 gulp.task('zip', () => {
     return gulp.src('build/**/*')
-        .pipe(zip('api-parser.zip'))
+        .pipe(zip('dist.zip'))
         .pipe(gulp.dest('dist'));
 });
 

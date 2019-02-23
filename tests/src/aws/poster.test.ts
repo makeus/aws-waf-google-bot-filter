@@ -44,15 +44,7 @@ describe('Poster', () => {
                 Updates: [
                     {
                         IPSetDescriptor: IP1,
-                        Action: 'DELETE',
-                    },
-                    {
-                        IPSetDescriptor: IP1,
                         Action: 'INSERT',
-                    },
-                    {
-                        IPSetDescriptor: IP2,
-                        Action: 'DELETE',
                     },
                     {
                         IPSetDescriptor: IP2,
