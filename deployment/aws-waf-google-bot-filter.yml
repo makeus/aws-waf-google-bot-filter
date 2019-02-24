@@ -6,18 +6,15 @@ Parameters:
   SourceIPSetId:
     Description: Id of the IP Set used as source for IPs to check. Example example1ds3t-46da-4fdb-b8d5-abc321j569j5
     Type: String
-    Default: 885522be-368d-4d02-ada3-b699c315d1e8
 
   LambdaScriptBucket:
     Description: Aws s3 bucket where lamda code zips are
     Type: String
-    Default: google-bot-filter
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
 
   LambdaApiParserFileName:
     Description: Filename of the code for the api-parser lambda
     Type: String
-    Default: api-parser.zip
     AllowedPattern: ^[a-zA-Z0-9-]*\.zip$
     ConstraintDescription: Zip file
 
