@@ -65,6 +65,22 @@ describe('GoogleVerify', () => {
             expect(reverse).not.toHaveBeenCalled()
 
         })
+
+        test('should on error return false', async () => {
+
+            // @ts-ignore
+            reverse.mockImplementation((ip: string, cb) => {
+                throw new Error('etHostByAddr ENOTFOUND 154.83.122.134')
+            })
+
+            let ip: IP = {
+                Value: '154.83.122.134/32',
+                Type: 'IPV4',
+            }
+
+            expect(await GoogleVerify.isGoogleIp(ip)).toEqual(false)
+            expect(reverse).toHaveBeenCalledWith('154.83.122.134', expect.any(Function))
+        })
     })
 
 })

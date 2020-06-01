@@ -19,8 +19,12 @@ class GoogleVerify {
         }
 
         let ip = IP.Value.split('/').shift()
-
-        let hostNames = await (promisify(reverse)(ip))
+        let hostNames;
+        try {
+            hostNames = await (promisify(reverse)(ip))
+        } catch (e) {
+            return false;
+        }
 
         return typeof hostNames.find((hostname: string) => {
             for (let host of GOOGLEHOSTS) {
